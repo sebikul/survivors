@@ -16,6 +16,8 @@ import com.baru.survivor.backend.resources.ReservoirManager;
 import com.baru.survivor.backend.resources.Resource;
 import com.baru.survivor.backend.resources.ResourceType;
 import com.baru.survivor.backend.village.Tribe;
+import com.baru.survivor.backend.agents.AgentBuilderType;
+
 
 public class Agent implements Serializable{
 
@@ -32,8 +34,9 @@ public class Agent implements Serializable{
 	private Point goal;
 	private Status goalState;
 	private float pathSize;
+	private AgentBuilderType type;
 	
-	public Agent(Point position){
+	public Agent(Point position, AgentBuilderType type){
 		Random rand = new Random();
 		this.kindness = rand.nextFloat();
 		this.foodBag = new Bag(Survivor.agentSlots);
@@ -45,6 +48,7 @@ public class Agent implements Serializable{
 		this.visionRange = 2;
 		this.position = position;
 		NameGenerator ng;
+		this.type = type;
 		try {
 			ng = new NameGenerator(Gdx.files.internal("roman.syl").reader(15));
 			name = ng.compose(3);
@@ -154,7 +158,7 @@ public class Agent implements Serializable{
 				path.add(0, tribePosition);
 			}
 		}else{
-			Direction dir = pheromones.getDirFrom(agentManager, tribePosition, terrainManager, position, lastPosition, goal);
+			Direction dir = pheromones.getDirFrom(type, agentManager, tribePosition, terrainManager, position, lastPosition, goal);
 			if (dir != null){
 				Point newPosition = new Point(position.x + dir.getX(), position.y + dir.getY());
 				lastPosition = position;
@@ -250,6 +254,8 @@ public class Agent implements Serializable{
 	public float getThirst() {
 		return thirst;
 	}
+
+	public AgentBuilderType getType() {return type;}
 
 	public void removeHunger() {
 		hunger = 1;

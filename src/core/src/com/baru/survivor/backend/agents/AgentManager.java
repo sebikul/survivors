@@ -68,7 +68,7 @@ public class AgentManager implements Serializable{
 				if (agent.getGoalState() == Status.NEST_PHEROMONE && 
 						!agent.position().equals(tribePosition) &&
 						(!positionBeforeTurn.equals(agent.position()))){
-					pheromones.addPheromone(agent.position().x, agent.position().y, agent.getPheromoneIntensity(pheromones));
+					pheromones.addPheromone(agent.position().x, agent.position().y, agent.getPheromoneIntensity(pheromones), agent.getType());
 				}
 			}
 		}
@@ -80,7 +80,7 @@ public class AgentManager implements Serializable{
 	}
 
 	public void generateAgent(Point position, Tribe tribe) {
-		Agent agent = new Agent(position);
+		Agent agent = new Agent(position, tribe.getType());
 		agents.add(agent);
 		tribes.put(agent, tribe);
 		tribe.addMember(agent);

@@ -7,47 +7,48 @@ import java.util.Map;
 import java.util.Random;
 
 import com.baru.survivor.Survivor;
+import com.baru.survivor.backend.agents.AgentBuilderType;
 import com.baru.survivor.backend.agents.AgentManager;
 import com.baru.survivor.backend.agents.Direction;
 import com.baru.survivor.backend.map.TerrainManager;
 
 public class Pheromones implements Serializable{
 	
-	private float pheromones[][];
+	private Pheromone pheromones[][];
 	private int width;
 	private int height;
 	
 	private final float minPheromones = 0.0001f;
 	private final float maxPheromones = 1f;
 	private final float stepPheromone = 0.2f;
-	private final float pheromoneLoss = 0.01f;
+	private final float pheromoneLoss = 0.0001f;
 	private final float interestCoeff = 20f;
 	private final float pheromoneCoeff = 1f;
 	
 	public Pheromones(int width, int height){
-		this.pheromones = new float[width][height];
+		this.pheromones = new Pheromone[width][height];
 		this.width = width;
 		this.height = height;
 		for (int x = 0; x < width; x++){
 			for (int y = 0; y < height; y++){
-				pheromones[x][y] = minPheromones;
+				pheromones[x][y] = new Pheromone(minPheromones);
 			}
 		}
 	}
 	
-	public void addPheromone(int x, int y, float intensity){
-		pheromones[x][y] = (pheromones[x][y]+stepPheromone > maxPheromones)? maxPheromones: pheromones[x][y]+(stepPheromone*intensity);
+	public void addPheromone(int x, int y, float intensity, AgentBuilderType agentType){
+		pheromones[x][y].addIntensity(agentType, intensity, stepPheromone, maxPheromones);
 	}
 	
 	public void evaporatePheromones(){
 		for (int x = 0; x < width; x++){
 			for(int y = 0; y < height; y++){
-				pheromones[x][y] = (pheromones[x][y]-pheromoneLoss < minPheromones)? minPheromones: pheromones[x][y]-pheromoneLoss;
+				pheromones[x][y].evaporateIntensity(pheromoneLoss, minPheromones);
 			}
 		}
 	}
 	
-	public Direction getDirFrom(AgentManager agentManager, Point tribePosition, TerrainManager terrainManager, Point position, Point lastPosition, Point goal){
+	public Direction getDirFrom(AgentBuilderType agentType, AgentManager agentManager, Point tribePosition, TerrainManager terrainManager, Point position, Point lastPosition, Point goal){
 		Map<Direction, Double> directionsValues = new HashMap<Direction, Double>();
 		double totalValue = 0;
 		for (int x = -1; x <= 1; x++){
@@ -67,7 +68,7 @@ public class Pheromones implements Serializable{
 						if (interest == Double.POSITIVE_INFINITY || Double.isNaN(interest)){
 							return dir;
 						}
-						double dirValue = Math.pow(pheromones[target.x][target.y], pheromoneCoeff) * Math.pow(interest, interestCoeff);
+						double dirValue = Math.pow(pheromones[target.x][target.y].getIntensity(agentType), pheromoneCoeff) * Math.pow(interest, interestCoeff);
 						directionsValues.put(dir, dirValue);
 						totalValue += dirValue;
 						
@@ -102,8 +103,8 @@ public class Pheromones implements Serializable{
 		return Math.sqrt(Math.pow(to.x - from.x, 2)+Math.pow(to.y - from.y, 2));
 	}
 	
-	public float getIntensity(int x, int y) {
-		return pheromones[x][y];
+	public float getIntensity(int x, int y, AgentBuilderType agentType) {
+		return pheromones[x][y].getIntensity(agentType);
 	}
 
 	public float getMaxPheromones() {

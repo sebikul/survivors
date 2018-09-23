@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.baru.survivor.Survivor;
 import com.baru.survivor.backend.agents.Agent;
+import com.baru.survivor.backend.agents.AgentBuilderType;
 import com.baru.survivor.backend.agents.Bag;
 import com.baru.survivor.backend.resources.Resource;
 import com.baru.survivor.backend.resources.ResourceType;
@@ -17,9 +18,11 @@ public class Tribe implements Serializable{
 	private Bag villageFoodVault = new Bag(Survivor.villageSlots);
 	private Bag villageWaterVault = new Bag(Survivor.villageSlots);
 	private Point villageLocation;
-	
-	public Tribe(Point villageLocation) {
+	private AgentBuilderType type;
+
+	public Tribe(Point villageLocation, AgentBuilderType type) {
 		this.villageLocation = villageLocation;
+		this.type = type;
 	}
 	
 	public Bag getWaterVault(){
@@ -66,5 +69,9 @@ public class Tribe implements Serializable{
 			return true;
 		}
 		return false;
+	}
+
+	public AgentBuilderType getType() {
+		return type;
 	}
 }

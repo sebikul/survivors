@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.baru.survivor.Survivor;
 import com.baru.survivor.backend.State;
 import com.baru.survivor.backend.agents.Agent;
+import com.baru.survivor.backend.agents.AgentBuilderType;
 import com.baru.survivor.backend.agents.DayCycle;
 import com.baru.survivor.backend.pheromones.Pheromones;
 import com.baru.survivor.backend.resources.Reservoir;
@@ -85,7 +86,8 @@ public class GameUI {
 			pherPainter.update(updatePheromones);
 			pherPainter.draw(batch);
 			if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)){
-				font.draw(batch, String.valueOf(updatePheromones.getIntensity(Gdx.input.getX()/Survivor.tileSize, (Gdx.input.getY()) / Survivor.tileSize)),
+				// FIXME: It will be 'painted' according altruistic intensity
+				font.draw(batch, String.valueOf(updatePheromones.getIntensity(Gdx.input.getX()/Survivor.tileSize, (Gdx.input.getY()) / Survivor.tileSize, AgentBuilderType.ALTRUISTIC)),
 						Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
 			}
 		}

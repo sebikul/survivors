@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.io.Serializable;
 
 import com.baru.survivor.Survivor;
+import com.baru.survivor.backend.agents.AgentBuilderType;
 import com.baru.survivor.backend.agents.AgentManager;
 import com.baru.survivor.backend.agents.DayCycle;
 import com.baru.survivor.backend.log.Log;
@@ -85,7 +86,7 @@ public class State implements Serializable{
 					validLocation = true;
 				}
 			}
-			Tribe tribe = new Tribe(tribeLocation);
+			Tribe tribe = new Tribe(tribeLocation, i % 2 == 0 ? AgentBuilderType.ALTRUISTIC : AgentBuilderType.SELFISH);
 			tribeManager.addTribe(tribe);
 			for (int j = 0; j < villagersPerTribe; j++) {
 				agentManager.generateAgent(tribeLocation, tribe);
