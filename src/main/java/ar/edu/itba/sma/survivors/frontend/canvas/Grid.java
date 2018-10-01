@@ -17,7 +17,6 @@ import ar.edu.itba.sma.survivors.frontend.sprite.SpriteType;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.awt.*;
-import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -35,11 +34,7 @@ public class Grid {
 
     public void fillTerrainLayers(TerrainManager map, TribeManager tribes) {
         Random rand = new Random();
-        try {
-            spriteGenerator.initialize();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        spriteGenerator.initialize();
         Layer waterLayer = new Layer();
         Layer landLayer = new Layer();
         Layer shadeLayer = new Layer();

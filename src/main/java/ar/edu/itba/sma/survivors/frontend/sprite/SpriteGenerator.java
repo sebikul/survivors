@@ -4,16 +4,15 @@ import ar.edu.itba.sma.survivors.Survivor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class SpriteGenerator {
 
     private Texture spriteSheet;
-    private Map<SpriteType, SpriteSelector> spriteGenerator = new HashMap<SpriteType, SpriteSelector>();
+    private Map<SpriteType, SpriteSelector> spriteGenerator = new HashMap<>();
 
-    public void initialize() throws IOException {
+    public void initialize() {
         spriteSheet = new Texture(Gdx.files.internal(Survivor.spriteSheet));
         int[][] grass = {{175}, {176}, {177}, {178}, {179}, {180}, {181}, {182}, {183}, {184}, {185},
                 {186}, {187}, {188}, {189}, {190}};
