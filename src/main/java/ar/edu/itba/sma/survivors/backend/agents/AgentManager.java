@@ -14,8 +14,8 @@ import java.util.Map;
 
 public class AgentManager implements Serializable {
 
-    private List<Agent> agents = new ArrayList<Agent>();
-    private Map<Agent, Tribe> tribes = new HashMap<Agent, Tribe>();
+    private List<Agent> agents = new ArrayList<>();
+    private Map<Agent, Tribe> tribes = new HashMap<>();
 
     public void tickTime(TerrainManager terrainManager, ReservoirManager reservoirManager, DayCycle cycle, Pheromones pheromones) {
         for (Agent agent : agents) {

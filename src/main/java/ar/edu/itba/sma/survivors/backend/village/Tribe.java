@@ -14,7 +14,7 @@ import java.util.List;
 
 public class Tribe implements Serializable {
 
-    private List<Agent> members = new ArrayList<Agent>();
+    private List<Agent> members = new ArrayList<>();
     private Bag villageFoodVault = new Bag(Survivor.villageSlots);
     private Bag villageWaterVault = new Bag(Survivor.villageSlots);
     private Point villageLocation;
@@ -42,9 +42,9 @@ public class Tribe implements Serializable {
     }
 
     public void depositResource(Resource resource) {
-        if (resource.getResourceType() == ResourceType.FOOD && !villageFoodVault.isFull()) {
+        if (resource.getResourceType() == ResourceType.FOOD && villageFoodVault.isEmpty()) {
             villageFoodVault.addresource(resource);
-        } else if (resource.getResourceType() == ResourceType.WATER && !villageWaterVault.isFull()) {
+        } else if (resource.getResourceType() == ResourceType.WATER && villageWaterVault.isEmpty()) {
             villageWaterVault.addresource(resource);
         }
     }
@@ -65,10 +65,7 @@ public class Tribe implements Serializable {
         if (agent.stillNeedsFood() && villageFoodVault.usedSlots() > 0) {
             return true;
         }
-        if (agent.stillNeedsWater() && villageWaterVault.usedSlots() > 0) {
-            return true;
-        }
-        return false;
+        return agent.stillNeedsWater() && villageWaterVault.usedSlots() > 0;
     }
 
     public AgentBuilderType getType() {

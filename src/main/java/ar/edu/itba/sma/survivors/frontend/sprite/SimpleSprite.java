@@ -7,10 +7,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class SimpleSprite {
 
-    protected final Texture texture;
-    protected int[] spriteIndexes;
+    private final Texture texture;
+    int[] spriteIndexes;
 
-    public SimpleSprite(Texture texture, int[] spriteIndexes) {
+    SimpleSprite(Texture texture, int[] spriteIndexes) {
         this.texture = texture;
         this.spriteIndexes = spriteIndexes;
     }
@@ -19,7 +19,7 @@ public class SimpleSprite {
         return getTextureRegionByIndex(0);
     }
 
-    public TextureRegion getTextureRegionByIndex(int index) {
+    TextureRegion getTextureRegionByIndex(int index) {
         int x = (spriteIndexes[index] % 7) * Survivor.tileSize;
         int y = Survivor.tileSize * (spriteIndexes[index] / 7);
         return new TextureRegion(texture, x, y, Survivor.tileSize, Survivor.tileSize);

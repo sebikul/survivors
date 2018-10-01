@@ -37,7 +37,7 @@ public class Agent implements Serializable {
 
     private AgentType agentType;
 
-    public Agent(Point position, AgentBuilderType type) {
+    Agent(Point position, AgentBuilderType type) {
         Random rand = new Random();
         this.kindness = rand.nextFloat();
 
@@ -46,7 +46,7 @@ public class Agent implements Serializable {
         this.foodBag = new Bag(Survivor.agentSlots);
         this.waterBag = new Bag(Survivor.agentSlots);
         this.hunger = 1;
-        this.path = new LinkedList<Point>();
+        this.path = new LinkedList<>();
         this.path.add(position);
         this.thirst = 1;
         this.visionRange = 2;
@@ -65,7 +65,7 @@ public class Agent implements Serializable {
         return name;
     }
 
-    public void consumeFromBags() {
+    void consumeFromBags() {
         if (isHungry()) {
             consumeFromFoodBag();
         }
@@ -74,41 +74,23 @@ public class Agent implements Serializable {
         }
     }
 
-    public boolean isHungry() {
+    private boolean isHungry() {
         if (kindness > 0.8) {
-            if (hunger < 0.2) {
-                return true;
-            }
-            return false;
+            return hunger < 0.2;
         } else if (kindness > 0.4) {
-            if (hunger < 0.5) {
-                return true;
-            }
-            return false;
+            return hunger < 0.5;
         } else {
-            if (hunger < 0.8) {
-                return true;
-            }
-            return false;
+            return hunger < 0.8;
         }
     }
 
-    public boolean isThirsty() {
+    private boolean isThirsty() {
         if (kindness > 0.8) {
-            if (thirst < 0.2) {
-                return true;
-            }
-            return false;
+            return thirst < 0.2;
         } else if (kindness > 0.4) {
-            if (thirst < 0.5) {
-                return true;
-            }
-            return false;
+            return thirst < 0.5;
         } else {
-            if (thirst < 0.8) {
-                return true;
-            }
-            return false;
+            return thirst < 0.8;
         }
     }
 
@@ -126,8 +108,8 @@ public class Agent implements Serializable {
         }
     }
 
-    public void addHungerThirst() {
-        float amountToReduce = 0.5f / (Survivor.secondsPerDay * (1000 / Survivor.tickTime));
+    void addHungerThirst() {
+        float amountToReduce = 0.5f / (Survivor.secondsPerDay * (1000.0f / Survivor.tickTime));
         if (hunger > 0) {
             hunger -= amountToReduce;
             if (hunger <= 0) {
@@ -142,7 +124,7 @@ public class Agent implements Serializable {
         }
     }
 
-    public void move(TerrainManager terrainManager, AgentManager agentManager, Point tribePosition, Pheromones pheromones) {
+    void move(TerrainManager terrainManager, AgentManager agentManager, Point tribePosition, Pheromones pheromones) {
         if (goalState == Status.NEST_NO_PHEROMONE || goalState == Status.NEST_PHEROMONE) {
             if (path.size() > 0) {
                 Point newPosition = path.get(0);
@@ -172,7 +154,7 @@ public class Agent implements Serializable {
         }
     }
 
-    public boolean pickUp(ReservoirManager reservoirManager) {
+    boolean pickUp(ReservoirManager reservoirManager) {
         Reservoir reservoir = reservoirManager.getReservoirAt(position);
         if (reservoir != null && reservoir.hasResource()) {
             consumeResourceTillFull(reservoir);
@@ -259,7 +241,7 @@ public class Agent implements Serializable {
         return thirst;
     }
 
-    public AgentBuilderType getType() {
+    AgentBuilderType getType() {
         return type;
     }
 
@@ -279,7 +261,7 @@ public class Agent implements Serializable {
         return ((Integer) waterBag.usedSlots()).toString();
     }
 
-    public void depositInTribeBag(Tribe tribe) {
+    void depositInTribeBag(Tribe tribe) {
         int foodToShare = (int) (getPercentageToDeposit() * foodBag.usedSlots());
         int waterToShare = (int) (getPercentageToDeposit() * waterBag.usedSlots());
         while (foodToShare > 0) {
@@ -294,7 +276,7 @@ public class Agent implements Serializable {
         }
     }
 
-    public float getPercentageToDeposit() {
+    private float getPercentageToDeposit() {
         if (kindness > 0.6) {
             return 1;
         } else if (kindness > 0.3) {
@@ -304,7 +286,7 @@ public class Agent implements Serializable {
         }
     }
 
-    public void pickUpFromTribeBag(Tribe tribe) {
+    void pickUpFromTribeBag(Tribe tribe) {
         if (isHungry()) {
             Resource food = tribe.getFoodVault().getResource();
             if (food != null) {
@@ -319,21 +301,21 @@ public class Agent implements Serializable {
         }
     }
 
-    public int getVision() {
+    int getVision() {
         return visionRange;
     }
 
-    public void setGoalPoint(Point goalPoint, Status status) {
+    void setGoalPoint(Point goalPoint, Status status) {
         goal = goalPoint;
         goalState = status;
         pathSize = 1f / path.size();
     }
 
-    public Status getGoalState() {
+    Status getGoalState() {
         return goalState;
     }
 
-    public void cleanPath() {
+    void cleanPath() {
         path.remove(0);
         List<Point> visited = new LinkedList<Point>();
         findRepeats(0, visited);
@@ -365,45 +347,33 @@ public class Agent implements Serializable {
         return path.size();
     }
 
-    public Point getGoalPoint() {
+    Point getGoalPoint() {
         return goal;
     }
 
     public boolean stillNeedsFood() {
-        if (hunger < 0.5) {
-            return true;
-        }
-        return false;
+        return hunger < 0.5;
     }
 
     public boolean stillNeedsWater() {
-        if (thirst < 0.5) {
-            return true;
-        }
-        return false;
+        return thirst < 0.5;
     }
 
-    public boolean isDyingFromHunger() {
-        float amountToReduce = 1.0f / (Survivor.secondsPerDay * (1000 / Survivor.tickTime));
-        if (hunger - path.size() * amountToReduce + foodBag.usedSlots() * amountToReduce <= 0) {
-            return true;
-        }
-        return false;
+    private boolean isDyingFromHunger() {
+        double amountToReduce = 1.0f / (Survivor.secondsPerDay * (1000.0 / Survivor.tickTime));
+        return hunger - path.size() * amountToReduce + foodBag.usedSlots() * amountToReduce <= 0;
     }
 
     public boolean isDyingFromThirst() {
-        float amountToReduce = 1.0f / (Survivor.secondsPerDay * (1000 / Survivor.tickTime));
-        if (thirst - path.size() * amountToReduce + waterBag.usedSlots() * amountToReduce <= 0) {
-            return true;
-        }
-        return false;
+        double amountToReduce = 1.0f / (Survivor.secondsPerDay * (1000.0 / Survivor.tickTime));
+        return thirst - path.size() * amountToReduce + waterBag.usedSlots() * amountToReduce <= 0;
     }
 
-    public boolean isDying() {
-        return isDyingFromHunger() || isDyingFromHunger();
+    boolean isDying() {
+        return isDyingFromHunger() || isDyingFromThirst();
     }
 
-    public float getPheromoneIntensity(Pheromones pheromones) {
+    float getPheromoneIntensity(Pheromones pheromones) {
         if (Survivor.pheromoneDistanceLossOn) {
             System.out.println(pathSize);
             return pathSize * 15 * kindness;
@@ -412,7 +382,7 @@ public class Agent implements Serializable {
         }
     }
 
-    public AgentType getAgentType() {
+    AgentType getAgentType() {
         return agentType;
     }
 }

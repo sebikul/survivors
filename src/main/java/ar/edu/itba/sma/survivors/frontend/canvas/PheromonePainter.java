@@ -11,37 +11,37 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class PheromonePainter {
 
-    Sprite pheromoneAvaroSprite;
-    Sprite pheromoneAlturistaSprite;
-    Pheromones pheromones;
+    private Sprite pheromoneSelfishSprite;
+    private Sprite pheromoneAlturisticSprite;
+    private Pheromones pheromones;
 
     public PheromonePainter() {
         Pixmap pherAvaroPm = new Pixmap(Survivor.tileSize, Survivor.tileSize, Pixmap.Format.RGBA8888);
         pherAvaroPm.setColor(1f, 0f, 0f, 1f);
         pherAvaroPm.fillTriangle(0, 0, 0, 32, 32, 32);
-        this.pheromoneAvaroSprite = new Sprite(new Texture(pherAvaroPm));
+        this.pheromoneSelfishSprite = new Sprite(new Texture(pherAvaroPm));
 
         Pixmap pherAlturistaPm = new Pixmap(Survivor.tileSize, Survivor.tileSize, Pixmap.Format.RGBA8888);
         pherAlturistaPm.setColor(0f, 0f, 1f, 1f);
         pherAlturistaPm.fillTriangle(0, 0, 32, 0, 32, 32);
-        this.pheromoneAlturistaSprite = new Sprite(new Texture(pherAlturistaPm));
+        this.pheromoneAlturisticSprite = new Sprite(new Texture(pherAlturistaPm));
     }
 
     public void draw(SpriteBatch batch) {
         for (int x = 0; x < Survivor.width; x++) {
             for (int y = 0; y < Survivor.height; y++) {
 
-                pheromoneAvaroSprite.setPosition(x * Survivor.tileSize, Gdx.graphics.getHeight() - (y + 1) * Survivor.tileSize);
-                pheromoneAvaroSprite.draw(batch, pheromones.getIntensity(x, y, AgentBuilderType.ALTRUISTIC));
+                pheromoneSelfishSprite.setPosition(x * Survivor.tileSize, Gdx.graphics.getHeight() - (y + 1) * Survivor.tileSize);
+                pheromoneSelfishSprite.draw(batch, pheromones.getIntensity(x, y, AgentBuilderType.ALTRUISTIC));
 
-                pheromoneAlturistaSprite.setPosition(x * Survivor.tileSize, Gdx.graphics.getHeight() - (y + 1) * Survivor.tileSize);
-                pheromoneAlturistaSprite.draw(batch, pheromones.getIntensity(x, y, AgentBuilderType.SELFISH));
+                pheromoneAlturisticSprite.setPosition(x * Survivor.tileSize, Gdx.graphics.getHeight() - (y + 1) * Survivor.tileSize);
+                pheromoneAlturisticSprite.draw(batch, pheromones.getIntensity(x, y, AgentBuilderType.SELFISH));
             }
         }
     }
 
     public void dispose() {
-        pheromoneAvaroSprite.getTexture().dispose();
+        pheromoneSelfishSprite.getTexture().dispose();
     }
 
     public void update(Pheromones pheromones) {

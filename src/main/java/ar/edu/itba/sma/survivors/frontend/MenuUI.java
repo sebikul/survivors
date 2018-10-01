@@ -14,31 +14,26 @@ import java.io.*;
 public class MenuUI {
 
     private Stage stage = new Stage();
-    private Skin skin;
-    private Table table, container;
 
-    private Label seedName, tribesNum, villagersPerTribe, foodNum, foodDur, lakesNum, lakesDur;
     private TextField seedNameField, tribesNumField, villagersPerTribeField, foodNumField, foodDurField, lakesNumField, lakesDurField;
-    private List files;
-    private ScrollPane scrollPane;
-    private TextButton loadFile, generateFile;
+    private List<Object> files;
 
 
     public void create() {
-        skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
-        table = new Table();
-        container = new Table();
-        scrollPane = new ScrollPane(container, skin);
+        Skin skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
+        Table table = new Table();
+        Table container = new Table();
+        ScrollPane scrollPane = new ScrollPane(container, skin);
         scrollPane.setFadeScrollBars(true);
         stage.addActor(table);
 
-        seedName = new Label("Seed name", skin);
-        tribesNum = new Label("Tribes quantity", skin);
-        villagersPerTribe = new Label("Villagers per tribe", skin);
-        foodNum = new Label("Food repositories quantity", skin);
-        foodDur = new Label("Food repositories uses", skin);
-        lakesNum = new Label("Water repositories quantity", skin);
-        lakesDur = new Label("Water repositories uses", skin);
+        Label seedName = new Label("Seed name", skin);
+        Label tribesNum = new Label("Tribes quantity", skin);
+        Label villagersPerTribe = new Label("Villagers per tribe", skin);
+        Label foodNum = new Label("Food repositories quantity", skin);
+        Label foodDur = new Label("Food repositories uses", skin);
+        Label lakesNum = new Label("Water repositories quantity", skin);
+        Label lakesDur = new Label("Water repositories uses", skin);
 
         seedNameField = new TextField("Map", skin);
         tribesNumField = new TextField("1", skin);
@@ -48,10 +43,10 @@ public class MenuUI {
         lakesNumField = new TextField("10", skin);
         lakesDurField = new TextField("50", skin);
 
-        files = new List(skin);
+        files = new List<>(skin);
 
-        loadFile = new TextButton("Load selected seed", skin);
-        generateFile = new TextButton("Create seed", skin);
+        TextButton loadFile = new TextButton("Load selected seed", skin);
+        TextButton generateFile = new TextButton("Create seed", skin);
 
         generateFile.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
@@ -127,11 +122,16 @@ public class MenuUI {
     public void render() {
 
         File folder = new File("./maps/");
-        folder.mkdir();
+        if (!folder.mkdir()) {
+            System.out.println("Could not create maps folder!");
+        }
         File logs = new File("./logs/");
-        logs.mkdir();
+        if (!logs.mkdir()) {
+            System.out.println("Could not create logs folder!");
+        }
 
         String[] listOfFiles = folder.list();
+        assert listOfFiles != null;
         files.setItems(listOfFiles);
 
         Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);

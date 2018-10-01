@@ -3,17 +3,17 @@ package ar.edu.itba.sma.survivors.backend.pheromones;
 
 import ar.edu.itba.sma.survivors.backend.agents.AgentBuilderType;
 
-public class Pheromone {
+class Pheromone {
 
     private float selfishIntensity;
     private float altruisticIntensity;
 
-    public Pheromone(float initialIntensity) {
+    Pheromone(float initialIntensity) {
         this.selfishIntensity = initialIntensity;
         this.altruisticIntensity = initialIntensity;
     }
 
-    public float getIntensity(AgentBuilderType agentType) {
+    float getIntensity(AgentBuilderType agentType) {
         switch (agentType) {
             case SELFISH:
                 return selfishIntensity;
@@ -22,7 +22,7 @@ public class Pheromone {
         }
     }
 
-    public void addIntensity(AgentBuilderType agentType, float newIntensity, float stepPheromone, float maxPheromones) {
+    void addIntensity(AgentBuilderType agentType, float newIntensity, float stepPheromone, float maxPheromones) {
         switch (agentType) {
             case SELFISH:
                 addSelfishIntensity(stepPheromone, maxPheromones, newIntensity);
@@ -47,7 +47,7 @@ public class Pheromone {
                         this.altruisticIntensity + (stepPheromone * newIntensity);
     }
 
-    public void evaporateIntensity(float pheromoneLoss, float minPheromones) {
+    void evaporateIntensity(float pheromoneLoss, float minPheromones) {
         this.selfishIntensity =
                 (this.selfishIntensity - pheromoneLoss < minPheromones) ?
                         minPheromones :

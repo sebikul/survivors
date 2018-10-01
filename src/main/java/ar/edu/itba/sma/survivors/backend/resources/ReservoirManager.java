@@ -18,11 +18,7 @@ public class ReservoirManager implements Serializable {
     }
 
     public Reservoir getReservoirAt(Point position) {
-        if (reservoirs.containsKey(position)) {
-            return reservoirs.get(position);
-        } else {
-            return null;
-        }
+        return reservoirs.get(position);
     }
 
     public Point getReservoirInRange(Point position, int vision) {

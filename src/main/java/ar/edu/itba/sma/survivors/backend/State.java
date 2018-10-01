@@ -64,7 +64,7 @@ public class State implements Serializable {
         return log;
     }
 
-    public void generateMap() {
+    private void generateMap() {
         terrainManager = TerrainGenerator.generateMap();
     }
 

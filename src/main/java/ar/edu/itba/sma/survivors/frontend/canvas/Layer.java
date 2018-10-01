@@ -12,11 +12,11 @@ public class Layer {
 
     private SimpleSprite[][] tiles;
 
-    public Layer() {
+    Layer() {
         tiles = new SimpleSprite[Survivor.width][Survivor.height];
     }
 
-    public void setSprite(SimpleSprite newTile, Point point) {
+    void setSprite(SimpleSprite newTile, Point point) {
         tiles[point.x][point.y] = newTile;
     }
 
@@ -24,7 +24,7 @@ public class Layer {
         return tiles[point.x][point.y];
     }
 
-    public void draw(SpriteBatch batch) {
+    void draw(SpriteBatch batch) {
         for (int x = 0; x < Survivor.width; x++) {
             for (int y = 0; y < Survivor.height; y++) {
                 if (tiles[x][y] != null) {

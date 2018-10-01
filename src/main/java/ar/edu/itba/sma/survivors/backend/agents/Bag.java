@@ -21,7 +21,7 @@ public class Bag implements Serializable {
         }
     }
 
-    public int getAvailableSlots() {
+    int getAvailableSlots() {
         return maxSlots - bag.size();
     }
 
@@ -37,7 +37,7 @@ public class Bag implements Serializable {
         return bag.size();
     }
 
-    public boolean isFull() {
-        return bag.size() == maxSlots;
+    public boolean isEmpty() {
+        return bag.size() != maxSlots;
     }
 }

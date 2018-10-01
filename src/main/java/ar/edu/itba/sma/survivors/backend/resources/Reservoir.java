@@ -13,7 +13,7 @@ public class Reservoir implements Serializable {
     public Reservoir(ResourceType type, int maxResources) {
         this.type = type;
         this.maxResources = maxResources;
-        this.resources = new ArrayList<Resource>(maxResources);
+        this.resources = new ArrayList<>(maxResources);
         addResources(maxResources);
     }
 
@@ -26,7 +26,7 @@ public class Reservoir implements Serializable {
         }
     }
 
-    public void addResources(int amount) {
+    private void addResources(int amount) {
         if (amount + resources.size() > maxResources) {
             return;
         }
