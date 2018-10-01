@@ -72,7 +72,7 @@ public class AgentManager implements Serializable{
 				}
 			}
 		}
-		pheromones.evaporatePheromones();
+		pheromones.evaporatePheromones(cycle);
 	}
 	
 	public List<Agent> getAgents() {

@@ -9,6 +9,7 @@ import java.util.Random;
 import com.baru.survivor.Survivor;
 import com.baru.survivor.backend.agents.AgentBuilderType;
 import com.baru.survivor.backend.agents.AgentManager;
+import com.baru.survivor.backend.agents.DayCycle;
 import com.baru.survivor.backend.agents.Direction;
 import com.baru.survivor.backend.map.TerrainManager;
 
@@ -18,12 +19,13 @@ public class Pheromones implements Serializable{
 	private int width;
 	private int height;
 	
-	private final float minPheromones = 0.0001f;
-	private final float maxPheromones = 1f;
-	private final float stepPheromone = 0.2f;
-	private final float pheromoneLoss = 0.0001f;
-	private final float interestCoeff = 20f;
-	private final float pheromoneCoeff = 1f;
+	private final float minPheromones = Float.parseFloat(System.getProperty("minPheromones"));
+	private final float maxPheromones = Float.parseFloat(System.getProperty("maxPheromones"));
+	private final float stepPheromone = Float.parseFloat(System.getProperty("stepPheromone"));
+	private final float pheromoneLoss = Float.parseFloat(System.getProperty("pheromoneLoss"));
+	private final float interestCoeff = Float.parseFloat(System.getProperty("interestCoeff"));
+	private final float pheromoneCoeff = Float.parseFloat(System.getProperty("pheromoneCoeff"));
+	private final float nightMultiplier = Float.parseFloat(System.getProperty("nightMultiplier"));
 	
 	public Pheromones(int width, int height){
 		this.pheromones = new Pheromone[width][height];
@@ -40,10 +42,10 @@ public class Pheromones implements Serializable{
 		pheromones[x][y].addIntensity(agentType, intensity, stepPheromone, maxPheromones);
 	}
 	
-	public void evaporatePheromones(){
+	public void evaporatePheromones(DayCycle cycle){
 		for (int x = 0; x < width; x++){
 			for(int y = 0; y < height; y++){
-				pheromones[x][y].evaporateIntensity(pheromoneLoss, minPheromones);
+				pheromones[x][y].evaporateIntensity(pheromoneLoss * (cycle == DayCycle.NIGHT ? nightMultiplier : 1), minPheromones);
 			}
 		}
 	}
@@ -74,7 +76,7 @@ public class Pheromones implements Serializable{
 						
 					}
 				}
-			}
+			};
 		}
 		
 		return throwDiceForDirection(directionsValues, totalValue);

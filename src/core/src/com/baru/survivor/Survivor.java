@@ -7,12 +7,18 @@ import com.baru.survivor.backend.State;
 import com.baru.survivor.frontend.GameUI;
 import com.baru.survivor.frontend.MenuUI;
 
-public class Survivor extends ApplicationAdapter {
-	
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.ResourceBundle;
+
+public class Survivor extends ApplicationAdapter{
+
 	public static final int width = 48;
 	public static final int height = 25;
 	public static final int tileSize = 32;
-	public static final int tickTime = 25;
+	public static final int tickTime = 100;
 	public static final int secondsPerDay = 24;
 	public static final String spriteSheet = "spriteSheet-big.png";
 	public static final int dayTicks = (1000/Survivor.tickTime) * Survivor.secondsPerDay;
