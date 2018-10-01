@@ -18,6 +18,8 @@ public class MenuUI {
     private TextField seedNameField, tribesNumField, villagersPerTribeField, foodNumField, foodDurField, lakesNumField, lakesDurField;
     private List<Object> files;
 
+    private File folder;
+    private File logs;
 
     public void create() {
         Skin skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
@@ -26,6 +28,15 @@ public class MenuUI {
         ScrollPane scrollPane = new ScrollPane(container, skin);
         scrollPane.setFadeScrollBars(true);
         stage.addActor(table);
+
+        folder = new File("./maps/");
+        if (!folder.exists() && !folder.mkdir()) {
+            System.out.println("Could not create maps folder!");
+        }
+        logs = new File("./logs/");
+        if (!logs.exists() && !logs.mkdir()) {
+            System.out.println("Could not create logs folder!");
+        }
 
         Label seedName = new Label("Seed name", skin);
         Label tribesNum = new Label("Tribes quantity", skin);
@@ -121,16 +132,7 @@ public class MenuUI {
 
     public void render() {
 
-        File folder = new File("./maps/");
-        if (!folder.mkdir()) {
-            System.out.println("Could not create maps folder!");
-        }
-        File logs = new File("./logs/");
-        if (!logs.mkdir()) {
-            System.out.println("Could not create logs folder!");
-        }
-
-        String[] listOfFiles = folder.list();
+        String[] listOfFiles = folder.list((file, s) -> !s.equals(".gitignore"));
         assert listOfFiles != null;
         files.setItems(listOfFiles);
 
