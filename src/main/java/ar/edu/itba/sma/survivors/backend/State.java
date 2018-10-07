@@ -89,7 +89,7 @@ public class State implements Serializable {
             Tribe tribe = new Tribe(tribeLocation, i % 2 == 0 ? AgentBuilderType.ALTRUISTIC : AgentBuilderType.SELFISH);
             tribeManager.addTribe(tribe);
             for (int j = 0; j < villagersPerTribe; j++) {
-                agentManager.generateAgent(tribeLocation, tribe);
+                agentManager.generateAgent(j, tribeLocation, tribe);
             }
         }
     }

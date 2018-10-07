@@ -86,8 +86,8 @@ public class AgentManager implements Serializable {
         return agents;
     }
 
-    public void generateAgent(Point position, Tribe tribe) {
-        Agent agent = new Agent(position, tribe.getType());
+    public void generateAgent(int agentIndex, Point position, Tribe tribe) {
+        Agent agent = new Agent(agentIndex, position, tribe);
         agents.add(agent);
         tribes.put(agent, tribe);
         tribe.addMember(agent);

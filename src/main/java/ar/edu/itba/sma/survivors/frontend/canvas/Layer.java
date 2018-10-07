@@ -29,7 +29,7 @@ public class Layer {
             for (int y = 0; y < Survivor.height; y++) {
                 if (tiles[x][y] != null) {
                     if (tiles[x][y] instanceof AnimatedSprite) {
-                        batch.draw(((AnimatedSprite) tiles[x][y]).getTextureRegion(),
+                        batch.draw(tiles[x][y].getTextureRegion(),
                                 x * Survivor.tileSize,
                                 Gdx.graphics.getHeight() - (y + 1) * Survivor.tileSize);
                     } else {

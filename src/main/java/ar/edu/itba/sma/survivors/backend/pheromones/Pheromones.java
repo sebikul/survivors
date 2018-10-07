@@ -54,26 +54,29 @@ public class Pheromones implements Serializable {
         double totalValue = 0;
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
-                if (!(x == 0 && y == 0)) {
-                    Direction dir = Direction.valueOf(x, y);
-                    Point target = new Point(position.x + x, position.y + y);
-                    double difference;
-                    if (lastPosition == null) {
-                        difference = 1;
-                    } else {
-                        difference = eulerDist(terrainManager, lastPosition, target);
-                    }
-                    double interest = (goal == null) ? difference : difference / eulerDist(terrainManager, target, goal);
-                    if ((Survivor.pathBlockingDisabled || agentManager.noAgentsAt(target) || target.equals(tribePosition)) &&
-                            TerrainManager.isValidPoint(target) && !terrainManager.isBlocked(target)) {
-                        if (interest == Double.POSITIVE_INFINITY || Double.isNaN(interest)) {
-                            return dir;
-                        }
-                        double dirValue = Math.pow(pheromones[target.x][target.y].getIntensity(agentType), pheromoneCoeff) * Math.pow(interest, interestCoeff);
-                        directionsValues.put(dir, dirValue);
-                        totalValue += dirValue;
+                if (x == 0 && y == 0) {
+                    continue;
+                }
 
+
+                Direction dir = Direction.valueOf(x, y);
+                Point target = new Point(position.x + x, position.y + y);
+                double difference;
+                if (lastPosition == null) {
+                    difference = 1;
+                } else {
+                    difference = eulerDist(terrainManager, lastPosition, target);
+                }
+                double interest = (goal == null) ? difference : difference / eulerDist(terrainManager, target, goal);
+                if ((Survivor.pathBlockingDisabled || agentManager.noAgentsAt(target) || target.equals(tribePosition)) &&
+                        TerrainManager.isValidPoint(target) && !terrainManager.isBlocked(target)) {
+                    if (interest == Double.POSITIVE_INFINITY || Double.isNaN(interest)) {
+                        return dir;
                     }
+                    double dirValue = Math.pow(pheromones[target.x][target.y].getIntensity(agentType), pheromoneCoeff) * Math.pow(interest, interestCoeff);
+                    directionsValues.put(dir, dirValue);
+                    totalValue += dirValue;
+
                 }
             }
             ;

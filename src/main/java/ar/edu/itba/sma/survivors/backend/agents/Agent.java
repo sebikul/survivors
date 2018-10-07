@@ -8,10 +8,8 @@ import ar.edu.itba.sma.survivors.backend.resources.ReservoirManager;
 import ar.edu.itba.sma.survivors.backend.resources.Resource;
 import ar.edu.itba.sma.survivors.backend.resources.ResourceType;
 import ar.edu.itba.sma.survivors.backend.village.Tribe;
-import com.badlogic.gdx.Gdx;
 
 import java.awt.*;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,11 +35,11 @@ public class Agent implements Serializable {
 
     private AgentType agentType;
 
-    Agent(Point position, AgentBuilderType type) {
+    Agent(int agentIndex, Point position, Tribe tribe) {
         Random rand = new Random();
         this.kindness = rand.nextFloat();
 
-        this.agentType = rand.nextBoolean() ? AgentType.GRABBER : AgentType.EXPLORER;
+        this.agentType = agentIndex % 2 == 0 ? AgentType.GRABBER : AgentType.EXPLORER;
 
         this.foodBag = new Bag(Survivor.agentSlots);
         this.waterBag = new Bag(Survivor.agentSlots);
@@ -51,14 +49,16 @@ public class Agent implements Serializable {
         this.thirst = 1;
         this.visionRange = 2;
         this.position = position;
-        NameGenerator ng;
-        this.type = type;
-        try {
-            ng = new NameGenerator(Gdx.files.internal("assets/roman.syl").reader(15));
-            name = ng.compose(3);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.type = tribe.getType();
+
+        this.name = String.format("T(%s,%s)-%s (%s)", tribe.position().getX(), tribe.position().getY(), agentIndex, type.name().charAt(0));
+
+//        try {
+//            ng = new NameGenerator(Gdx.files.internal("assets/roman.syl").reader(15));
+//            name = ng.compose(3);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public CharSequence name() {
