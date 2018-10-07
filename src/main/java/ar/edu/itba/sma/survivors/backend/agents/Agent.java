@@ -374,11 +374,13 @@ public class Agent implements Serializable {
     }
 
     float getPheromoneIntensity(Pheromones pheromones) {
+
+        float multiplier = this.isHungry() || this.isThirsty() ? 1.5f : 1;
+
         if (Survivor.pheromoneDistanceLossOn) {
-            System.out.println(pathSize);
-            return pathSize * 15 * kindness;
+            return pathSize * 15 * kindness * multiplier;
         } else {
-            return pheromones.getPhereomoneConstant() * kindness;
+            return pheromones.getPhereomoneConstant() * kindness * multiplier;
         }
     }
 
