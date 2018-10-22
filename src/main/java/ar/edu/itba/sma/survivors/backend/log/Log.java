@@ -4,6 +4,7 @@ import ar.edu.itba.sma.survivors.backend.agents.Agent;
 import ar.edu.itba.sma.survivors.backend.resources.ReservoirManager;
 import ar.edu.itba.sma.survivors.backend.village.Tribe;
 import ar.edu.itba.sma.survivors.backend.village.TribeManager;
+import ar.edu.itba.sma.survivors.frontend.Plotter;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -42,9 +43,16 @@ public class Log {
     }
 
     public void tick(TribeManager tribeManager, ReservoirManager reservoirManager) {
-        for (Tribe curTribe : tribeManager.getVillages()) {
+        if(curTick % 50 == 0) {
+            Plotter.updateResourcesInformation(reservoirManager.getTotals());
+        }
+        List<Tribe> villages = tribeManager.getVillages();
+        for (Tribe curTribe : villages) {
             FileWriter tribeDistFile = openTribeDistFile.get(curTribe);
             FileWriter tribeStatusFile = openTribeStatusFile.get(curTribe);
+            if(curTick % 50 == 0) {
+                Plotter.updatePeopleInformation(curTribe);
+            }
             try {
                 float curHunger = 0;
                 float curThirst = 0;
@@ -77,6 +85,9 @@ public class Log {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+        if(curTick % 50 == 0) {
+            Plotter.update();
         }
         curTick++;
     }

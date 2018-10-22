@@ -20,6 +20,7 @@ public class MenuUI {
 
     private File folder;
     private File logs;
+    private Plotter plotter = new Plotter();
 
     public void create() {
         Skin skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
@@ -68,6 +69,7 @@ public class MenuUI {
                 int lakesNumInt = Integer.valueOf(lakesNumField.getText());
                 int lakesDurInt = Integer.valueOf(lakesDurField.getText());
                 State generatedSeed = new State(tribesNumInt, villagersPerTribeInt, foodNumInt, foodDurInt, lakesNumInt, lakesDurInt);
+                //plotter.run(tribesNumInt, villagersPerTribeInt, foodNumInt*foodDurInt, lakesNumInt*lakesDurInt);
                 try {
                     FileOutputStream fileOut = new FileOutputStream("./maps/" + seedNameField.getText());
                     ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -86,6 +88,7 @@ public class MenuUI {
                     FileInputStream fileIn = new FileInputStream("./maps/" + files.getSelected());
                     ObjectInputStream in = new ObjectInputStream(fileIn);
                     State loadedState = (State) in.readObject();
+                    plotter.run(loadedState.getResourceManager().getTotals(), loadedState.getTribeManager().getVillages());
                     in.close();
                     fileIn.close();
                     loadedState.resetPheromones();

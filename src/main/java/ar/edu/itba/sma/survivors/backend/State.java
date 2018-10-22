@@ -11,6 +11,7 @@ import ar.edu.itba.sma.survivors.backend.pheromones.Pheromones;
 import ar.edu.itba.sma.survivors.backend.resources.ReservoirManager;
 import ar.edu.itba.sma.survivors.backend.village.Tribe;
 import ar.edu.itba.sma.survivors.backend.village.TribeManager;
+import ar.edu.itba.sma.survivors.frontend.Plotter;
 
 import java.awt.*;
 import java.io.Serializable;
@@ -86,7 +87,7 @@ public class State implements Serializable {
                     validLocation = true;
                 }
             }
-            Tribe tribe = new Tribe(tribeLocation, i % 2 == 0 ? AgentBuilderType.ALTRUISTIC : AgentBuilderType.SELFISH);
+            Tribe tribe = new Tribe(tribeLocation, i % 2 == 0 ? AgentBuilderType.ALTRUISTIC : AgentBuilderType.SELFISH, i);
             tribeManager.addTribe(tribe);
             for (int j = 0; j < villagersPerTribe; j++) {
                 agentManager.generateAgent(j, tribeLocation, tribe);

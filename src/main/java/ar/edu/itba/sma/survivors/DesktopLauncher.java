@@ -1,5 +1,6 @@
 package ar.edu.itba.sma.survivors;
 
+import ar.edu.itba.sma.survivors.frontend.Plotter;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 

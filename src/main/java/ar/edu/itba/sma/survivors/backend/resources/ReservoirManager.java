@@ -34,4 +34,15 @@ public class ReservoirManager implements Serializable {
         return closestReservoir;
     }
 
+    public Map<String, Integer> getTotals() {
+        Map totals = new HashMap<String, Integer>();
+        totals.put("water", 0);
+        totals.put("food", 0);
+        for(Reservoir r : reservoirs.values()) {
+            String s = r.type().toString().toLowerCase();
+            totals.put(s, (Integer) totals.get(s) + r.getUsesLeft());
+        }
+        return totals;
+    }
+
 }

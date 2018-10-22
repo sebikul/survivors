@@ -11,6 +11,7 @@ import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Tribe implements Serializable {
 
@@ -19,10 +20,12 @@ public class Tribe implements Serializable {
     private Bag villageWaterVault = new Bag(Survivor.villageSlots);
     private Point villageLocation;
     private AgentBuilderType type;
+    private String name;
 
-    public Tribe(Point villageLocation, AgentBuilderType type) {
+    public Tribe(Point villageLocation, AgentBuilderType type, int index) {
         this.villageLocation = villageLocation;
         this.type = type;
+        this.name = type.toString().concat(String.valueOf(index));
     }
 
     public Bag getWaterVault() {
@@ -61,6 +64,10 @@ public class Tribe implements Serializable {
         return members;
     }
 
+    public int getAliveAgents() {
+        return (members.stream().filter(p -> !p.isDead()).collect(Collectors.toList())).size();
+    }
+
     public boolean hasNeededResource(Agent agent) {
         if (agent.stillNeedsFood() && villageFoodVault.usedSlots() > 0) {
             return true;
@@ -71,4 +78,6 @@ public class Tribe implements Serializable {
     public AgentBuilderType getType() {
         return type;
     }
+
+    public String getName() {return name;}
 }
