@@ -47,7 +47,7 @@ public class Agent implements Serializable {
         this.path = new LinkedList<>();
         this.path.add(position);
         this.thirst = 1;
-        this.visionRange = 2;
+        this.visionRange = agentType == AgentType.EXPLORER ? 4 : 2;
         this.position = position;
         this.type = tribe.getType();
 
@@ -376,6 +376,10 @@ public class Agent implements Serializable {
     float getPheromoneIntensity(Pheromones pheromones) {
 
         float multiplier = this.isHungry() || this.isThirsty() ? 1.5f : 1;
+
+        if (this.agentType == AgentType.EXPLORER) {
+            multiplier = 3.0f;
+        }
 
         if (Survivor.pheromoneDistanceLossOn) {
             return pathSize * 15 * kindness * multiplier;

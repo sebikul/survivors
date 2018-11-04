@@ -1,37 +1,42 @@
 package ar.edu.itba.sma.survivors.frontend;
 
 import ar.edu.itba.sma.survivors.backend.village.Tribe;
-import org.knowm.xchart.XYChart;
 import org.knowm.xchart.QuickChart;
 import org.knowm.xchart.SwingWrapper;
+import org.knowm.xchart.XYChart;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Plotter implements Runnable {
 
-    private class ResourceWrap {
-        private List<Integer> food = new ArrayList<>();
-        private List<Integer> water = new ArrayList<>();
-        public ResourceWrap(int food, int water) {
-            this.food.add(food);
-            this.water.add(water);
-        }
+    public static void update() {
+        lastTick++;
+        ticks.add(lastTick);
 
-        public List<Integer> getFood() {
-            return food;
-        }
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
 
-        public List<Integer> getWater() {
-            return water;
-        }
+            @Override
+            public void run() {
+                people.forEach((k, v) -> {
+                    peopleChart.updateXYSeries((String) k, (List) ticks, (List) v, null);
+                });
 
-        public void addFood(int food) {
-            this.food.add(food);
-        }
+                villageCharts.forEach((k, v) -> {
+                    ((XYChart) v).updateXYSeries("Water", (List) ticks, ((ResourceWrap) villages.get(k.toString())).getWater(), null);
+                    ((XYChart) v).updateXYSeries("Food", (List) ticks, ((ResourceWrap) villages.get(k.toString())).getFood(), null);
+                });
 
-        public void addWater(int water) {
-            this.water.add(water);
-        }
+                resourcesChart.updateXYSeries("Water", (List) ticks, (List) resources.get("water"), null);
+                resourcesChart.updateXYSeries("Food", (List) ticks, (List) resources.get("food"), null);
+
+                for (int i = 0; i < graphCount; i++) {
+                    sw.repaintChart(i);
+                }
+            }
+        });
     }
 
     static List ticks;
@@ -67,6 +72,23 @@ public class Plotter implements Runnable {
         run();
     }
 
+    public static void updatePeopleInformation(Tribe tribe) {
+        ((List) people.get(tribe.getName())).add(tribe.getAliveAgents());
+        people.put(tribe.getName(), people.get(tribe.getName()));
+        updateVillageResourcesInformation(tribe);
+    }
+
+    public static void updateResourcesInformation(Map<String, Integer> newResources) {
+        ((List) resources.get("water")).add(newResources.get("water"));
+        ((List) resources.get("food")).add(newResources.get("food"));
+        resources.put("water", resources.get("water"));
+        resources.put("food", resources.get("food"));
+    }
+
+    private static void updateVillageResourcesInformation(Tribe tribe) {
+        ((ResourceWrap) villages.get(tribe.getName())).addFood(tribe.getFoodVault().usedSlots());
+        ((ResourceWrap) villages.get(tribe.getName())).addWater(tribe.getWaterVault().usedSlots());
+    }
 
     public void run() {
         ticks = new ArrayList();
@@ -74,19 +96,18 @@ public class Plotter implements Runnable {
 
         String firstKey = (String) people.keySet().toArray()[0];
 
-        peopleChart = QuickChart.getChart("People Chart", "Tick", "Units", firstKey, (List)ticks, (List)people.get(firstKey));
-        resourcesChart = QuickChart.getChart("Resources Chart", "Tick", "Units", "Water", (List)ticks, (List)resources.get("water"));
-        resourcesChart.addSeries("Food", (List)ticks, (List)resources.get("food"));
+        peopleChart = QuickChart.getChart("People Chart", "Tick", "Units", firstKey, (List) ticks, (List) people.get(firstKey));
+        resourcesChart = QuickChart.getChart("Resources Chart", "Tick", "Units", "Water", (List) ticks, (List) resources.get("water"));
+        resourcesChart.addSeries("Food", (List) ticks, (List) resources.get("food"));
 
 
-
-        people.forEach((k,v) -> {
-            if (!firstKey.equals((String)k)) {
-                peopleChart.addSeries((String)k, (List)v);
+        people.forEach((k, v) -> {
+            if (!firstKey.equals((String) k)) {
+                peopleChart.addSeries((String) k, (List) v);
             }
 
-            villageChart = QuickChart.getChart(k.toString(), "Tick", "Units", "Water", (List)ticks, ((ResourceWrap)villages.get(k.toString())).getWater());
-            villageChart.addSeries("Food", (List)ticks, ((ResourceWrap)villages.get(k.toString())).getWater());
+            villageChart = QuickChart.getChart(k.toString(), "Tick", "Units", "Water", (List) ticks, ((ResourceWrap) villages.get(k.toString())).getWater());
+            villageChart.addSeries("Food", (List) ticks, ((ResourceWrap) villages.get(k.toString())).getWater());
             charts.add(villageChart);
             villageCharts.put(k.toString(), villageChart);
         });
@@ -106,49 +127,30 @@ public class Plotter implements Runnable {
 
     }
 
-    public static void update() {
-        lastTick++;
-        ticks.add(lastTick);
+    private class ResourceWrap {
+        private List<Integer> food = new ArrayList<>();
+        private List<Integer> water = new ArrayList<>();
 
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+        public ResourceWrap(int food, int water) {
+            this.food.add(food);
+            this.water.add(water);
+        }
 
-            @Override
-            public void run() {
-                people.forEach((k,v) -> {
-                    peopleChart.updateXYSeries((String)k, (List) ticks, (List)v, null);
-                });
+        public List<Integer> getFood() {
+            return food;
+        }
 
-                villageCharts.forEach((k,v) -> {
-                    ((XYChart) v).updateXYSeries("Water", (List) ticks, ((ResourceWrap)villages.get(k.toString())).getWater(), null);
-                    ((XYChart) v).updateXYSeries("Food", (List) ticks, ((ResourceWrap)villages.get(k.toString())).getFood(), null);
-                });
+        public List<Integer> getWater() {
+            return water;
+        }
 
-                resourcesChart.updateXYSeries("Water", (List) ticks, (List) resources.get("water"), null);
-                resourcesChart.updateXYSeries("Food", (List) ticks, (List) resources.get("food"), null);
+        public void addFood(int food) {
+            this.food.add(food);
+        }
 
-                for (int i = 1; i < graphCount; i++ ) {
-                    sw.repaintChart(i-1);
-                }
-            }
-        });
-    }
-
-    public static void updatePeopleInformation(Tribe tribe) {
-        ((List)people.get(tribe.getName())).add(tribe.getAliveAgents());
-        people.put(tribe.getName(), people.get(tribe.getName()));
-        updateVillageResourcesInformation(tribe);
-    }
-
-    public static void updateResourcesInformation(Map<String, Integer> newResources) {
-        ((List)resources.get("water")).add(newResources.get("water"));
-        ((List)resources.get("food")).add(newResources.get("food"));
-        resources.put("water", resources.get("water"));
-        resources.put("food", resources.get("food"));
-    }
-
-    private static void updateVillageResourcesInformation(Tribe tribe) {
-        ((ResourceWrap)villages.get(tribe.getName())).addFood(tribe.getFoodVault().usedSlots());
-        ((ResourceWrap)villages.get(tribe.getName())).addWater(tribe.getWaterVault().usedSlots());
+        public void addWater(int water) {
+            this.water.add(water);
+        }
     }
 
 

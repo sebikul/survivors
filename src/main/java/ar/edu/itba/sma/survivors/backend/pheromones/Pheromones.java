@@ -50,7 +50,7 @@ public class Pheromones implements Serializable {
     }
 
     public Direction getDirFrom(AgentBuilderType agentType, AgentManager agentManager, Point tribePosition, TerrainManager terrainManager, Point position, Point lastPosition, Point goal) {
-        Map<Direction, Double> directionsValues = new HashMap<Direction, Double>();
+        Map<Direction, Double> directionsValues = new HashMap<>();
         double totalValue = 0;
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
@@ -58,9 +58,13 @@ public class Pheromones implements Serializable {
                     continue;
                 }
 
-
                 Direction dir = Direction.valueOf(x, y);
                 Point target = new Point(position.x + x, position.y + y);
+//
+//                if(target.equals(lastPosition)){
+//                    continue;
+//                }
+
                 double difference;
                 if (lastPosition == null) {
                     difference = 1;
@@ -79,16 +83,22 @@ public class Pheromones implements Serializable {
 
                 }
             }
-            ;
         }
 
         return throwDiceForDirection(directionsValues, totalValue);
     }
 
-    private Direction throwDiceForDirection(
-            Map<Direction, Double> directionsValues, double totalValue) {
+    private Direction throwDiceForDirection(Map<Direction, Double> directionsValues, double totalValue) {
 
         Random rnd = new Random();
+//        List<Direction> choices = directionsValues.entrySet().stream()
+//                .sorted(Map.Entry.comparingByValue())
+//                .map(Map.Entry::getKey)
+//                .collect(Collectors.toList());
+//
+//        int index = rnd.nextInt(choices.size() * 2 / 3);
+//
+//        return choices.get(index);
         double diceValue = rnd.nextFloat() * totalValue;
         double sum = 0;
         for (Direction dir : directionsValues.keySet()) {

@@ -61,8 +61,8 @@ public class AgentManager implements Serializable {
                         if (reservoirNearby != null) {
 
                             if (agent.getAgentType() == AgentType.EXPLORER) {
-                                agent.setGoalPoint(tribePosition, Status.NEST_PHEROMONE);
-                                agent.cleanPath();
+                                agent.setGoalPoint(reservoirNearby, Status.GRAB_RESOURCE);
+//                                agent.cleanPath();
                             } else if (agent.getAgentType() == AgentType.GRABBER) {
                                 agent.setGoalPoint(reservoirNearby, Status.GRAB_RESOURCE);
                             }
