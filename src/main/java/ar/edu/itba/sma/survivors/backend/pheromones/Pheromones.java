@@ -1,10 +1,7 @@
 package ar.edu.itba.sma.survivors.backend.pheromones;
 
 import ar.edu.itba.sma.survivors.Survivor;
-import ar.edu.itba.sma.survivors.backend.agents.AgentBuilderType;
-import ar.edu.itba.sma.survivors.backend.agents.AgentManager;
-import ar.edu.itba.sma.survivors.backend.agents.DayCycle;
-import ar.edu.itba.sma.survivors.backend.agents.Direction;
+import ar.edu.itba.sma.survivors.backend.agents.*;
 import ar.edu.itba.sma.survivors.backend.map.TerrainManager;
 
 import java.awt.*;
@@ -49,7 +46,7 @@ public class Pheromones implements Serializable {
         }
     }
 
-    public Direction getDirFrom(AgentBuilderType agentType, AgentManager agentManager, Point tribePosition, TerrainManager terrainManager, Point position, Point lastPosition, Point goal) {
+    public Direction getDirFrom(AgentBuilderType agentType, AgentManager agentManager, Point tribePosition, TerrainManager terrainManager, Point position, Point lastPosition, Point goal, AgentType type) {
         Map<Direction, Double> directionsValues = new HashMap<>();
         double totalValue = 0;
         for (int x = -1; x <= 1; x++) {
@@ -77,7 +74,18 @@ public class Pheromones implements Serializable {
                     if (interest == Double.POSITIVE_INFINITY || Double.isNaN(interest)) {
                         return dir;
                     }
-                    double dirValue = Math.pow(pheromones[target.x][target.y].getIntensity(agentType), pheromoneCoeff) * Math.pow(interest, interestCoeff);
+                    double dirValue;
+                    switch (type) {
+
+                        case EXPLORER:
+                            dirValue = 1;
+                            break;
+                        case GRABBER:
+                            dirValue = Math.pow(pheromones[target.x][target.y].getIntensity(agentType), pheromoneCoeff) * Math.pow(interest, interestCoeff);
+                            break;
+                        default:
+                            throw new RuntimeException();
+                    }
                     directionsValues.put(dir, dirValue);
                     totalValue += dirValue;
 

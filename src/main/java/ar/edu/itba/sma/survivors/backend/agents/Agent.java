@@ -148,7 +148,7 @@ public class Agent implements Serializable {
                 path.add(0, tribePosition);
             }
         } else {
-            Direction dir = pheromones.getDirFrom(type, agentManager, tribePosition, terrainManager, position, lastPosition, goal);
+            Direction dir = pheromones.getDirFrom(type, agentManager, tribePosition, terrainManager, position, lastPosition, goal, agentType);
             if (dir != null) {
                 Point newPosition = new Point(position.x + dir.getX(), position.y + dir.getY());
                 lastPosition = position;
