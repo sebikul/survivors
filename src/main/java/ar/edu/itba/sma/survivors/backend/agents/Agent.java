@@ -37,7 +37,11 @@ public class Agent implements Serializable {
 
     Agent(int agentIndex, Point position, Tribe tribe) {
         Random rand = new Random();
-        this.kindness = rand.nextFloat();
+        if (this.type == AgentBuilderType.SELFISH) {
+            this.kindness = rand.nextFloat()*0.5f;
+        } else {
+            this.kindness = rand.nextFloat()*(1-0.5f) + 0.5f;;
+        }
 
         this.agentType = agentIndex % 2 == 0 ? AgentType.GRABBER : AgentType.EXPLORER;
 
@@ -74,24 +78,24 @@ public class Agent implements Serializable {
         }
     }
 
-    private boolean isHungry() {
-        if (kindness > 0.8) {
-            return hunger < 0.2;
-        } else if (kindness > 0.4) {
-            return hunger < 0.5;
+    private boolean isNeeded(float need) {
+        if (kindness > 0.75) {
+            return need < 0.2;
+        } else if (kindness > 0.5) {
+            return need < 0.4;
+        } else if (kindness > 0.25) {
+            return need < 0.6;
         } else {
-            return hunger < 0.8;
+            return need < 0.8;
         }
     }
 
+    private boolean isHungry() {
+        return isNeeded(hunger);
+    }
+
     private boolean isThirsty() {
-        if (kindness > 0.8) {
-            return thirst < 0.2;
-        } else if (kindness > 0.4) {
-            return thirst < 0.5;
-        } else {
-            return thirst < 0.8;
-        }
+        return isNeeded(thirst);
     }
 
     private void consumeFromFoodBag() {
@@ -178,19 +182,37 @@ public class Agent implements Serializable {
         ResourceType type = reservoir.type();
         while (reservoir.hasResource()) {
             if (type == ResourceType.FOOD) {
-                if (hunger < 0.8) {
-                    reservoir.getResource();
-                    hunger += 0.2;
+                if (this.type == AgentBuilderType.ALTRUISTIC) {
+                    if (isHungry()) {
+                        reservoir.getResource();
+                        hunger += 0.2;
+                    } else {
+                        return;
+                    }
                 } else {
-                    return;
+                    if (hunger < 0.8) {
+                        reservoir.getResource();
+                        hunger += 0.2;
+                    } else {
+                        return;
+                    }
                 }
             }
             if (type == ResourceType.WATER) {
-                if (thirst < 0.8) {
-                    reservoir.getResource();
-                    thirst += 0.2;
+                if (this.type == AgentBuilderType.ALTRUISTIC) {
+                    if (isThirsty()) {
+                        reservoir.getResource();
+                        thirst += 0.2;
+                    } else {
+                        return;
+                    }
                 } else {
-                    return;
+                    if (thirst < 0.8) {
+                        reservoir.getResource();
+                        thirst += 0.2;
+                    } else {
+                        return;
+                    }
                 }
             }
         }
@@ -277,9 +299,9 @@ public class Agent implements Serializable {
     }
 
     private float getPercentageToDeposit() {
-        if (kindness > 0.6) {
+        if (this.type == AgentBuilderType.ALTRUISTIC) {
             return 1;
-        } else if (kindness > 0.3) {
+        } else if (kindness > 0.25f) {
             return 0.5f;
         } else {
             return 0;

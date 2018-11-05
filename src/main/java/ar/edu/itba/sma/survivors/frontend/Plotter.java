@@ -4,6 +4,8 @@ import ar.edu.itba.sma.survivors.backend.village.Tribe;
 import org.knowm.xchart.QuickChart;
 import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.XYChart;
+import org.knowm.xchart.XYSeries;
+import org.knowm.xchart.style.Styler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,15 +26,15 @@ public class Plotter implements Runnable {
                     peopleChart.updateXYSeries((String) k, (List) ticks, (List) v, null);
                 });
 
-                villageCharts.forEach((k, v) -> {
-                    ((XYChart) v).updateXYSeries("Water", (List) ticks, ((ResourceWrap) villages.get(k.toString())).getWater(), null);
-                    ((XYChart) v).updateXYSeries("Food", (List) ticks, ((ResourceWrap) villages.get(k.toString())).getFood(), null);
+                villages.forEach((k, v) -> {
+                    XYSeries waterSeries = waterChart.updateXYSeries(k.toString(), (List) ticks, ((ResourceWrap) v).getWater(), null);
+                    XYSeries foodSeries = foodChart.updateXYSeries(k.toString(), (List) ticks, ((ResourceWrap) v).getFood(), null);
                 });
 
                 resourcesChart.updateXYSeries("Water", (List) ticks, (List) resources.get("water"), null);
                 resourcesChart.updateXYSeries("Food", (List) ticks, (List) resources.get("food"), null);
 
-                for (int i = 0; i < graphCount; i++) {
+                for (int i = 0; i < charts.size(); i++) {
                     sw.repaintChart(i);
                 }
             }
@@ -44,14 +46,14 @@ public class Plotter implements Runnable {
     static XYChart peopleChart;
     static XYChart resourcesChart;
     static XYChart villageChart;
+    static XYChart waterChart = null;
+    static XYChart foodChart = null;
     static List<XYChart> charts = new ArrayList<XYChart>();
     static SwingWrapper<XYChart> sw;
     static Map people = new HashMap<String, List>();
     static Map resources = new HashMap<String, List>();
     static Map villages = new HashMap<String, List>();
-    static Map villageCharts = new HashMap<String, XYChart>();
-
-    public static int graphCount = 2;
+    static private Integer maxYAxis = 0;
 
     public void run(Map<String, Integer> newResources, List<Tribe> tribes) {
 
@@ -61,7 +63,6 @@ public class Plotter implements Runnable {
             people.put(t.getName(), aux);
 
             villages.put(t.getName(), new ResourceWrap(t.getFoodVault().usedSlots(), t.getWaterVault().usedSlots()));
-            graphCount += 2;
         }
         ArrayList<Integer> auxFood = new ArrayList<>();
         ArrayList<Integer> auxWater = new ArrayList<>();
@@ -69,6 +70,7 @@ public class Plotter implements Runnable {
         auxWater.add(newResources.get("water"));
         resources.put("food", auxFood);
         resources.put("water", auxWater);
+        maxYAxis = newResources.get("food") > newResources.get("water") ? newResources.get("food") : newResources.get("water");
         run();
     }
 
@@ -99,22 +101,45 @@ public class Plotter implements Runnable {
         peopleChart = QuickChart.getChart("People Chart", "Tick", "Units", firstKey, (List) ticks, (List) people.get(firstKey));
         resourcesChart = QuickChart.getChart("Resources Chart", "Tick", "Units", "Water", (List) ticks, (List) resources.get("water"));
         resourcesChart.addSeries("Food", (List) ticks, (List) resources.get("food"));
+        resourcesChart.getStyler().setYAxisMax(Double.valueOf(maxYAxis));
 
+        peopleChart.getStyler().setToolTipType(Styler.ToolTipType.xAndYLabels);
+        peopleChart.getStyler().setToolTipsEnabled(true);
+
+        resourcesChart.getStyler().setToolTipType(Styler.ToolTipType.xAndYLabels);
+        resourcesChart.getStyler().setToolTipsEnabled(true);
 
         people.forEach((k, v) -> {
             if (!firstKey.equals((String) k)) {
                 peopleChart.addSeries((String) k, (List) v);
             }
 
-            villageChart = QuickChart.getChart(k.toString(), "Tick", "Units", "Water", (List) ticks, ((ResourceWrap) villages.get(k.toString())).getWater());
-            villageChart.addSeries("Food", (List) ticks, ((ResourceWrap) villages.get(k.toString())).getWater());
-            charts.add(villageChart);
-            villageCharts.put(k.toString(), villageChart);
+            if (waterChart == null) {
+                waterChart = QuickChart.getChart("Water Chart", "Tick", "Units", k.toString(), (List) ticks, ((ResourceWrap) villages.get(k.toString())).getWater());
+                waterChart.getStyler().setToolTipType(Styler.ToolTipType.xAndYLabels);
+                waterChart.getStyler().setToolTipsEnabled(true);
+                //waterChart.getStyler().setYAxisMax(Double.valueOf(maxYAxis/people.size()));
+            } else {
+                waterChart.addSeries(k.toString(), (List) ticks, ((ResourceWrap) villages.get(k.toString())).getWater());
+            }
+
+            if (foodChart == null) {
+                foodChart = QuickChart.getChart("Food Chart", "Tick", "Units", k.toString(), (List) ticks, ((ResourceWrap) villages.get(k.toString())).getFood());
+                foodChart.getStyler().setToolTipType(Styler.ToolTipType.xAndYLabels);
+                foodChart.getStyler().setToolTipsEnabled(true);
+                //foodChart.getStyler().setYAxisMax(Double.valueOf(maxYAxis/people.size()));
+            } else {
+                foodChart.addSeries(k.toString(), (List) ticks, ((ResourceWrap) villages.get(k.toString())).getFood());
+            };
+
+
         });
 
 
         charts.add(peopleChart);
         charts.add(resourcesChart);
+        charts.add(foodChart);
+        charts.add(waterChart);
 
         sw = new SwingWrapper<>(charts);
         sw.displayChartMatrix();
