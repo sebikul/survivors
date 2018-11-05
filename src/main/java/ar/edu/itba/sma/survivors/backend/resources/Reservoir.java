@@ -9,6 +9,7 @@ public class Reservoir implements Serializable {
     private List<Resource> resources;
     private ResourceType type;
     private int maxResources;
+    private int timeToRegenerate = 0;
 
     public Reservoir(ResourceType type, int maxResources) {
         this.type = type;
@@ -46,6 +47,17 @@ public class Reservoir implements Serializable {
 
     public int getUsesLeft() {
         return resources.size();
+    }
+
+    public void stepped() {
+        this.timeToRegenerate = 0;
+    }
+
+    public void addTickTime() {
+        this.timeToRegenerate++;
+        if (timeToRegenerate > 500 && timeToRegenerate % 50 == 0) {
+            addResources(1);
+        }
     }
 
 }

@@ -44,5 +44,11 @@ public class ReservoirManager implements Serializable {
         }
         return totals;
     }
+    
+    public void addTime() {
+        reservoirs.forEach((k,v) -> {
+            v.addTickTime();
+        });
+    }
 
 }

@@ -160,6 +160,7 @@ public class Agent implements Serializable {
 
     boolean pickUp(ReservoirManager reservoirManager) {
         Reservoir reservoir = reservoirManager.getReservoirAt(position);
+        reservoir.stepped();
         if (reservoir != null && reservoir.hasResource()) {
             consumeResourceTillFull(reservoir);
             fillBagWithResource(reservoir);

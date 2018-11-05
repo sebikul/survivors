@@ -80,6 +80,7 @@ public class AgentManager implements Serializable {
             }
         }
         pheromones.evaporatePheromones(cycle);
+        reservoirManager.addTime();
     }
 
     public List<Agent> getAgents() {
