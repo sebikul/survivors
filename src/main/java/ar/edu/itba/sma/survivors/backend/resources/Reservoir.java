@@ -55,7 +55,7 @@ public class Reservoir implements Serializable {
 
     public void addTickTime() {
         this.timeToRegenerate++;
-        if (timeToRegenerate > 500 && timeToRegenerate % 50 == 0) {
+        if (timeToRegenerate > 250 && timeToRegenerate % 25 == 0) {
             addResources(1);
         }
     }
