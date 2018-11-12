@@ -1,6 +1,5 @@
 package ar.edu.itba.sma.survivors;
 
-import ar.edu.itba.sma.survivors.frontend.Plotter;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
@@ -28,6 +27,6 @@ public class DesktopLauncher {
         System.setProperty("pheromoneLoss", "0.006f");
         System.setProperty("interestCoeff", "20f");
         System.setProperty("pheromoneCoeff", "1f");
-        System.setProperty("nightMultiplier", "5f");
+        System.setProperty("nightMultiplier", "1f");
     }
 }
