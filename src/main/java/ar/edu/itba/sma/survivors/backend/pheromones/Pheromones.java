@@ -35,6 +35,7 @@ public class Pheromones implements Serializable {
     }
 
     public void addPheromone(int x, int y, float intensity, AgentBuilderType agentType) {
+        intensity = intensity < 0 ? maxPheromones : intensity;
         pheromones[x][y].addIntensity(agentType, intensity, stepPheromone, maxPheromones);
     }
 

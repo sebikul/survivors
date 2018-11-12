@@ -401,7 +401,7 @@ public class Agent implements Serializable {
         float multiplier = this.isHungry() || this.isThirsty() ? 1.5f : 1;
 
         if (this.agentType == AgentType.EXPLORER) {
-            multiplier = 3.0f;
+            multiplier = -3.0f;
         }
 
         if (Survivor.pheromoneDistanceLossOn) {

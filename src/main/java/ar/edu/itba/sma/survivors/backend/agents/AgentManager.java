@@ -20,43 +20,58 @@ public class AgentManager implements Serializable {
     public void tickTime(TerrainManager terrainManager, ReservoirManager reservoirManager, DayCycle cycle, Pheromones pheromones) {
         for (Agent agent : agents) {
             if (!agent.isDead()) {
+                // Si no se esta muriendo
                 Point positionBeforeTurn = agent.position();
                 Tribe tribe = tribes.get(agent);
                 Point tribePosition = tribe.position();
                 agent.addHungerThirst();
                 if (cycle == DayCycle.NIGHT) {
+                    // Si es de noche
                     if (agent.position().equals(tribePosition)) {
+                        // Si está en su tribu
                         agent.pickUpFromTribeBag(tribe);
                     } else {
+                        // No está en su tribu
                         if (agent.getGoalState() != Status.NEST_NO_PHEROMONE) {
+                            // Volve a la tribu sin dejar feromona
                             agent.setGoalPoint(tribePosition, Status.NEST_NO_PHEROMONE);
                             agent.cleanPath();
                         }
                         agent.move(terrainManager, this, tribePosition, pheromones);
                         if (agent.position().equals(tribePosition)) {
+                            // Deposita lo que tengas
                             agent.depositInTribeBag(tribe);
                         }
                     }
                 } else {
+                    // Si es de día
                     if (agent.isDying()) {
+                        // Si se está muriendo
                         if (agent.position().equals(tribePosition)) {
+                            // Si está en la tribu
                             agent.pickUpFromTribeBag(tribe);
                             if (!tribe.hasNeededResource(agent)) {
+                                // Si no hay de ese recurso, anda a buscar
                                 agent.setGoalPoint(null, Status.SEARCH_RESOURCE);
                             }
                         } else if (agent.getGoalState() != Status.NEST_NO_PHEROMONE) {
+                            // Anda a la tribu sin dejar feromona
                             agent.setGoalPoint(tribePosition, Status.NEST_NO_PHEROMONE);
                             agent.cleanPath();
                         }
                     } else if (agent.getGoalState() == Status.GRAB_RESOURCE && agent.position().equals(agent.getGoalPoint())) {
+                        // Si no se está muriendo y está agarrando recursos
                         agent.pickUp(reservoirManager);
+                        // volve a la tribu dejando feromona
                         agent.setGoalPoint(tribePosition, Status.NEST_PHEROMONE);
                         agent.cleanPath();
                     } else if (agent.position().equals(tribePosition)) {
+                        // Si no se esta muriendo y llegó a la tribu
                         agent.depositInTribeBag(tribe);
                         agent.pickUpFromTribeBag(tribe);
                         agent.setGoalPoint(null, Status.SEARCH_RESOURCE);
                     } else if (agent.getGoalState() == Status.SEARCH_RESOURCE) {
+                        // Si no se está muriendo y tiene que ir a buscar
                         Point reservoirNearby = reservoirManager.getReservoirInRange(agent.position(), agent.getVision());
                         if (reservoirNearby != null) {
 
