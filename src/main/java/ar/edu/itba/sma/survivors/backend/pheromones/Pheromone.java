@@ -2,6 +2,7 @@ package ar.edu.itba.sma.survivors.backend.pheromones;
 
 
 import ar.edu.itba.sma.survivors.backend.agents.AgentBuilderType;
+import ar.edu.itba.sma.survivors.backend.agents.AgentType;
 
 class Pheromone {
 
@@ -22,25 +23,35 @@ class Pheromone {
         }
     }
 
-    void addIntensity(AgentBuilderType agentType, float newIntensity, float stepPheromone, float maxPheromones) {
+    void addIntensity(AgentBuilderType agentType, float newIntensity, float stepPheromone, float maxPheromones, AgentType type) {
         switch (agentType) {
             case SELFISH:
-                addSelfishIntensity(stepPheromone, maxPheromones, newIntensity);
+                addSelfishIntensity(stepPheromone, maxPheromones, newIntensity, type);
                 break;
             case ALTRUISTIC:
-                addAltruisticIntensity(stepPheromone, maxPheromones, newIntensity);
+                addAltruisticIntensity(stepPheromone, maxPheromones, newIntensity, type);
                 break;
         }
     }
 
-    private void addSelfishIntensity(float stepPheromone, float maxPheromones, float newIntensity) {
+    private void addSelfishIntensity(float stepPheromone, float maxPheromones, float newIntensity, AgentType type) {
+
+        if (type == AgentType.EXPLORER) {
+            this.selfishIntensity = maxPheromones;
+        }
+
         this.selfishIntensity =
                 (this.selfishIntensity + stepPheromone > maxPheromones) ?
                         maxPheromones :
                         this.selfishIntensity + (stepPheromone * newIntensity);
     }
 
-    private void addAltruisticIntensity(float stepPheromone, float maxPheromones, float newIntensity) {
+    private void addAltruisticIntensity(float stepPheromone, float maxPheromones, float newIntensity, AgentType type) {
+
+        if (type == AgentType.EXPLORER) {
+            this.altruisticIntensity = maxPheromones;
+        }
+
         this.altruisticIntensity =
                 (this.altruisticIntensity + stepPheromone > maxPheromones) ?
                         maxPheromones :

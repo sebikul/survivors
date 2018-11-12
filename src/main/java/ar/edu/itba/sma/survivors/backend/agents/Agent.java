@@ -37,11 +37,6 @@ public class Agent implements Serializable {
 
     Agent(int agentIndex, Point position, Tribe tribe) {
         Random rand = new Random();
-        if (this.type == AgentBuilderType.SELFISH) {
-            this.kindness = rand.nextFloat()*0.5f;
-        } else {
-            this.kindness = rand.nextFloat()*(1-0.5f) + 0.5f;;
-        }
 
         this.agentType = agentIndex % 2 == 0 ? AgentType.GRABBER : AgentType.EXPLORER;
 
@@ -55,6 +50,12 @@ public class Agent implements Serializable {
         this.position = position;
         this.type = tribe.getType();
 
+        if (this.type == AgentBuilderType.SELFISH) {
+            this.kindness = rand.nextFloat() * 0.5f;
+        } else {
+            this.kindness = rand.nextFloat() * (1 - 0.5f) + 0.5f;
+            ;
+        }
         this.name = String.format("T(%s,%s)-%s (%s)", tribe.position().getX(), tribe.position().getY(), agentIndex, type.name().charAt(0));
 
 //        try {
@@ -400,9 +401,9 @@ public class Agent implements Serializable {
 
         float multiplier = this.isHungry() || this.isThirsty() ? 1.5f : 1;
 
-        if (this.agentType == AgentType.EXPLORER) {
-            multiplier = 3.0f;
-        }
+//        if (this.agentType == AgentType.EXPLORER) {
+//            multiplier = 3.0f;
+//        }
 
         if (Survivor.pheromoneDistanceLossOn) {
             return pathSize * 15 * kindness * multiplier;

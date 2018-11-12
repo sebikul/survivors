@@ -60,12 +60,13 @@ public class AgentManager implements Serializable {
                         Point reservoirNearby = reservoirManager.getReservoirInRange(agent.position(), agent.getVision());
                         if (reservoirNearby != null) {
 
-                            if (agent.getAgentType() == AgentType.EXPLORER) {
-                                agent.setGoalPoint(reservoirNearby, Status.GRAB_RESOURCE);
+//                            if (agent.getAgentType() == AgentType.EXPLORER) {
+//                                agent.setGoalPoint(reservoirNearby, Status.GRAB_RESOURCE);
 //                                agent.cleanPath();
-                            } else if (agent.getAgentType() == AgentType.GRABBER) {
+//                            } else if (agent.getAgentType() == AgentType.GRABBER) {
                                 agent.setGoalPoint(reservoirNearby, Status.GRAB_RESOURCE);
-                            }
+                            agent.cleanPath();
+//                            }
 
                         }
                     }
@@ -75,7 +76,7 @@ public class AgentManager implements Serializable {
                 if (agent.getGoalState() == Status.NEST_PHEROMONE &&
                         !agent.position().equals(tribePosition) &&
                         (!positionBeforeTurn.equals(agent.position()))) {
-                    pheromones.addPheromone(agent.position().x, agent.position().y, agent.getPheromoneIntensity(pheromones), agent.getType());
+                    pheromones.addPheromone(agent.position().x, agent.position().y, agent.getPheromoneIntensity(pheromones), agent.getType(), agent.getAgentType());
                 }
             }
         }

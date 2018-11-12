@@ -32,10 +32,10 @@ public class PheromonePainter {
             for (int y = 0; y < Survivor.height; y++) {
 
                 pheromoneSelfishSprite.setPosition(x * Survivor.tileSize, Gdx.graphics.getHeight() - (y + 1) * Survivor.tileSize);
-                pheromoneSelfishSprite.draw(batch, pheromones.getIntensity(x, y, AgentBuilderType.ALTRUISTIC));
+                pheromoneSelfishSprite.draw(batch, pheromones.getIntensity(x, y, AgentBuilderType.SELFISH));
 
                 pheromoneAlturisticSprite.setPosition(x * Survivor.tileSize, Gdx.graphics.getHeight() - (y + 1) * Survivor.tileSize);
-                pheromoneAlturisticSprite.draw(batch, pheromones.getIntensity(x, y, AgentBuilderType.SELFISH));
+                pheromoneAlturisticSprite.draw(batch, pheromones.getIntensity(x, y, AgentBuilderType.ALTRUISTIC));
             }
         }
     }
