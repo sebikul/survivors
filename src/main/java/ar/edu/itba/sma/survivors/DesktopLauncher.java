@@ -27,6 +27,6 @@ public class DesktopLauncher {
         System.setProperty("pheromoneLoss", "0.006f");
         System.setProperty("interestCoeff", "20f");
         System.setProperty("pheromoneCoeff", "1f");
-        System.setProperty("nightMultiplier", "1f");
+        System.setProperty("nightMultiplier", "2f");
     }
 }
