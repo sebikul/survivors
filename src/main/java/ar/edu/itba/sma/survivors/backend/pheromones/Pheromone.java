@@ -38,24 +38,25 @@ class Pheromone {
 
         if (type == AgentType.EXPLORER) {
             this.selfishIntensity = maxPheromones;
-        }
+        } else {
+            this.selfishIntensity =
+                    (this.selfishIntensity + stepPheromone > maxPheromones) ?
+                            maxPheromones :
+                            this.selfishIntensity + (stepPheromone * newIntensity);
 
-        this.selfishIntensity =
-                (this.selfishIntensity + stepPheromone > maxPheromones) ?
-                        maxPheromones :
-                        this.selfishIntensity + (stepPheromone * newIntensity);
+        }
     }
 
     private void addAltruisticIntensity(float stepPheromone, float maxPheromones, float newIntensity, AgentType type) {
 
         if (type == AgentType.EXPLORER) {
             this.altruisticIntensity = maxPheromones;
+        } else {
+            this.altruisticIntensity =
+                    (this.altruisticIntensity + stepPheromone > maxPheromones) ?
+                            maxPheromones :
+                            this.altruisticIntensity + (stepPheromone * newIntensity);
         }
-
-        this.altruisticIntensity =
-                (this.altruisticIntensity + stepPheromone > maxPheromones) ?
-                        maxPheromones :
-                        this.altruisticIntensity + (stepPheromone * newIntensity);
     }
 
     void evaporateIntensity(float pheromoneLoss, float minPheromones) {

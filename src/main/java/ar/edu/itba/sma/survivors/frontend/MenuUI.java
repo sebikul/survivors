@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.google.gson.Gson;
 
 import java.io.*;
 
@@ -73,6 +74,8 @@ public class MenuUI {
                 try {
                     FileOutputStream fileOut = new FileOutputStream("./maps/" + seedNameField.getText());
                     ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                    // Gson gson = new Gson();
+                    // String json = gson.toJson(generatedSeed);
                     out.writeObject(generatedSeed);
                     out.close();
                     fileOut.close();
@@ -87,6 +90,8 @@ public class MenuUI {
                 try {
                     FileInputStream fileIn = new FileInputStream("./maps/" + files.getSelected());
                     ObjectInputStream in = new ObjectInputStream(fileIn);
+                    // Gson gson = new Gson();
+                    // String json = gson.fromJson(in.)
                     State loadedState = (State) in.readObject();
                     plotter.run(loadedState.getResourceManager().getTotals(), loadedState.getTribeManager().getVillages());
                     in.close();
